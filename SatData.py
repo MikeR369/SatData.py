@@ -12,8 +12,8 @@ class SatData:
     
     Attributes
     ----------
-    data : list
-        A list to store the JSON data.
+    data : list or dict
+        A variable to store the JSON data.
     """
     
     def __init__(self):
@@ -31,9 +31,15 @@ class SatData:
         with open('sat.json', 'r') as file:
             self.data = json.load(file)
         
-        # Ensure that data is a list of dictionaries
-        if not isinstance(self.data, list) or not all(isinstance(item, dict) for item in self.data):
-            raise ValueError("JSON data must be a list of dictionaries.")
+        # Debugging: Print the type and sample of the data
+        print("Data loaded. Type:", type(self.data))
+        if isinstance(self.data, list):
+            print("Sample entry:", self.data[0] if self.data else "No data found")
+        elif isinstance(self.data, dict):
+            print("Keys:", list(self.data.keys()))
+            print("Sample entry:", list(self.data.values())[0] if self.data else "No data found")
+        else:
+            raise ValueError("JSON data must be a list or dictionary.")
         
     def save_as_csv(self, dbns):
         """
@@ -58,8 +64,16 @@ class SatData:
                    "SAT Writing Avg. Score"]
         output_rows.append(headers)
         
+        # Prepare data rows
+        if isinstance(self.data, list):
+            data_items = self.data
+        elif isinstance(self.data, dict):
+            data_items = self.data.values()
+        else:
+            raise ValueError("Unexpected JSON data format.")
+        
         # Data rows
-        for item in self.data:
+        for item in data_items:
             if item.get('DBN') in dbns:  # Use .get() to safely access keys
                 school_name = f'"{item.get("SCHOOL NAME", "")}"'  # Enclose in double quotes to handle commas in school names
                 row = [
@@ -76,3 +90,4 @@ class SatData:
         with open('output.csv', 'w', newline='') as file:
             for row in output_rows:
                 file.write(','.join(row) + '\n')
+                
