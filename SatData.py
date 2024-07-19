@@ -59,9 +59,9 @@ class SatData:
         output_rows = []
 
         # Header row
-        headers = ["DBN", "SCHOOL NAME", "Num of SAT Test Takers", 
-                   "SAT Critical Reading Avg. Score", "SAT Math Avg. Score", 
-                   "SAT Writing Avg. Score"]
+        headers = ["DBN", "School Name", "Number of Test Takers", 
+                   "Critical Reading Mean", "Mathematics Mean", 
+                   "Writing Mean"]
         output_rows.append(headers)
         
         # Data rows
