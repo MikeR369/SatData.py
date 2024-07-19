@@ -10,7 +10,7 @@ class SatData:
     """
     A class to read SAT data from a JSON file and save selected data as a CSV file.
     
-    Attributes:
+    Attributes
     ----------
     data : list
         A list to store the JSON data.
@@ -20,11 +20,11 @@ class SatData:
         """
         Initializes the SatData class by reading the 'sat.json' file and storing its data.
         
-        Parameters:
+        Parameters
         ----------
         None
         
-        Returns:
+        Returns
         ----------
         None
         """
@@ -35,12 +35,12 @@ class SatData:
         """
         Saves the SAT data for the specified DBNs to 'output.csv' in CSV format.
         
-        Parameters:
+        Parameters
         ----------
         dbns : list[str]
             A list of DBNs (district bureau numbers) to include in the CSV file.
         
-        Returns:
+        Returns
         ----------
         None
         """
@@ -61,10 +61,10 @@ class SatData:
                 row = [
                     item['DBN'],  # Access the correct field name for DBN
                     school_name,  # School name enclosed in double quotes
-                    item["Num of SAT Test Takers"],  # Access the correct field name
-                    item["SAT Critical Reading Avg. Score"],  # Access the correct field name
-                    item["SAT Math Avg. Score"],  # Access the correct field name
-                    item["SAT Writing Avg. Score"]  # Access the correct field name
+                    str(item["Num of SAT Test Takers"]),  # Access the correct field name
+                    str(item["SAT Critical Reading Avg. Score"]),  # Access the correct field name
+                    str(item["SAT Math Avg. Score"]),  # Access the correct field name
+                    str(item["SAT Writing Avg. Score"])  # Access the correct field name
                 ]
                 output_rows.append(row)
         
