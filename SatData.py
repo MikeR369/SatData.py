@@ -12,8 +12,8 @@ class SatData:
     
     Attributes
     ----------
-    data : list or dict
-        A variable to store the JSON data.
+    data : list
+        A list to store the JSON data.
     """
     
     def __init__(self):
@@ -29,17 +29,17 @@ class SatData:
         None
         """
         with open('sat.json', 'r') as file:
-            self.data = json.load(file)
+            json_data = json.load(file)
+        
+        # Access the list of records from the 'data' key
+        self.data = json_data.get('data', [])
         
         # Debugging: Print the type and sample of the data
         print("Data loaded. Type:", type(self.data))
         if isinstance(self.data, list):
             print("Sample entry:", self.data[0] if self.data else "No data found")
-        elif isinstance(self.data, dict):
-            print("Keys:", list(self.data.keys()))
-            print("Sample entry:", list(self.data.values())[0] if self.data else "No data found")
         else:
-            raise ValueError("JSON data must be a list or dictionary.")
+            raise ValueError("Expected a list of records under 'data' key.")
         
     def save_as_csv(self, dbns):
         """
@@ -64,25 +64,18 @@ class SatData:
                    "SAT Writing Avg. Score"]
         output_rows.append(headers)
         
-        # Prepare data rows
-        if isinstance(self.data, list):
-            data_items = self.data
-        elif isinstance(self.data, dict):
-            data_items = self.data.values()
-        else:
-            raise ValueError("Unexpected JSON data format.")
-        
         # Data rows
-        for item in data_items:
-            if item.get('DBN') in dbns:  # Use .get() to safely access keys
-                school_name = f'"{item.get("SCHOOL NAME", "")}"'  # Enclose in double quotes to handle commas in school names
+        for item in self.data:
+            dbn = item[8]
+            if dbn in dbns:
+                school_name = f'"{item[9]}"'  # Enclose in double quotes to handle commas in school names
                 row = [
-                    item.get('DBN', ""),  # Use .get() to safely access keys
-                    school_name,  # School name enclosed in double quotes
-                    str(item.get("Num of SAT Test Takers", "")),  # Use .get() to safely access keys
-                    str(item.get("SAT Critical Reading Avg. Score", "")),  # Use .get() to safely access keys
-                    str(item.get("SAT Math Avg. Score", "")),  # Use .get() to safely access keys
-                    str(item.get("SAT Writing Avg. Score", ""))  # Use .get() to safely access keys
+                    dbn,
+                    school_name,
+                    str(item[10]),
+                    str(item[11]),
+                    str(item[12]),
+                    str(item[13])
                 ]
                 output_rows.append(row)
         
@@ -90,4 +83,3 @@ class SatData:
         with open('output.csv', 'w', newline='') as file:
             for row in output_rows:
                 file.write(','.join(row) + '\n')
-                
