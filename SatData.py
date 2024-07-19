@@ -30,7 +30,11 @@ class SatData:
         """
         with open('sat.json', 'r') as file:
             self.data = json.load(file)
-
+        
+        # Ensure that data is a list of dictionaries
+        if not isinstance(self.data, list) or not all(isinstance(item, dict) for item in self.data):
+            raise ValueError("JSON data must be a list of dictionaries.")
+        
     def save_as_csv(self, dbns):
         """
         Saves the SAT data for the specified DBNs to 'output.csv' in CSV format.
@@ -56,15 +60,15 @@ class SatData:
         
         # Data rows
         for item in self.data:
-            if item['DBN'] in dbns:  # Access the correct field name for the DBN
-                school_name = f'"{item["SCHOOL NAME"]}"'  # Enclose in double quotes to handle commas in school names
+            if item.get('DBN') in dbns:  # Use .get() to safely access keys
+                school_name = f'"{item.get("SCHOOL NAME", "")}"'  # Enclose in double quotes to handle commas in school names
                 row = [
-                    item['DBN'],  # Access the correct field name for DBN
+                    item.get('DBN', ""),  # Use .get() to safely access keys
                     school_name,  # School name enclosed in double quotes
-                    str(item["Num of SAT Test Takers"]),  # Access the correct field name
-                    str(item["SAT Critical Reading Avg. Score"]),  # Access the correct field name
-                    str(item["SAT Math Avg. Score"]),  # Access the correct field name
-                    str(item["SAT Writing Avg. Score"])  # Access the correct field name
+                    str(item.get("Num of SAT Test Takers", "")),  # Use .get() to safely access keys
+                    str(item.get("SAT Critical Reading Avg. Score", "")),  # Use .get() to safely access keys
+                    str(item.get("SAT Math Avg. Score", "")),  # Use .get() to safely access keys
+                    str(item.get("SAT Writing Avg. Score", ""))  # Use .get() to safely access keys
                 ]
                 output_rows.append(row)
         
